@@ -13,17 +13,14 @@ class VideoPlayout extends StatefulWidget {
   final PlayerState desiredState;
   final bool showPlayerControls;
 
-  const VideoPlayout(
-      {Key? key, required this.desiredState, required this.showPlayerControls})
-      : super(key: key);
+  const VideoPlayout({Key? key, required this.desiredState, required this.showPlayerControls}) : super(key: key);
 
   @override
   _VideoPlayoutState createState() => _VideoPlayoutState();
 }
 
-class _VideoPlayoutState extends State<VideoPlayout>
-    with PlayerObserver, MultiAudioSupport {
-  final String? _url = null;
+class _VideoPlayoutState extends State<VideoPlayout> with PlayerObserver, MultiAudioSupport {
+  final String? _url = 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_20mb.mp4';
   List<HLSManifestLanguage> _hlsLanguages = [];
 
   @override
@@ -72,10 +69,7 @@ class _VideoPlayoutState extends State<VideoPlayout>
                         .map((e) => MaterialButton(
                               child: Text(
                                 e.name ?? "",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .button!
-                                    .copyWith(color: Colors.white),
+                                style: Theme.of(context).textTheme.button!.copyWith(color: Colors.white),
                               ),
                               onPressed: () {
                                 setPreferredAudioLanguage(e.code ?? "eng");
@@ -127,6 +121,7 @@ class _VideoPlayoutState extends State<VideoPlayout>
   @override
   void onDuration(int? duration) {
     // TODO: implement onDuration
+    print('onDuration $duration');
     super.onDuration(duration);
   }
 
