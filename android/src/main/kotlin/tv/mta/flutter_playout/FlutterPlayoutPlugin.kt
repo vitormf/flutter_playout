@@ -1,6 +1,7 @@
 package tv.mta.flutter_playout
 
 import android.app.Activity
+import android.util.Log
 import tv.mta.flutter_playout.audio.AudioPlayer
 import tv.mta.flutter_playout.video.PlayerViewFactory
 
@@ -14,9 +15,9 @@ class FlutterPlayoutPlugin: FlutterPlugin, ActivityAware {
 
   private lateinit var activity : Activity
 
-  private lateinit var playerViewFactory : PlayerViewFactory
+  private var playerViewFactory : PlayerViewFactory? = null
 
-  private lateinit var audioPlayerFactory : AudioPlayer
+  private var audioPlayerFactory : AudioPlayer? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     try {
@@ -25,39 +26,41 @@ class FlutterPlayoutPlugin: FlutterPlugin, ActivityAware {
               flutterPluginBinding.binaryMessenger,
               activity)
     } catch (e: Exception) {
+      Log.w("FlutterPlayout", "Failed initializing playerViewFactory", e)
     }
 
     try {
       audioPlayerFactory = AudioPlayer.registerWith(flutterPluginBinding.binaryMessenger,
               activity, flutterPluginBinding.applicationContext)
     } catch (e: Exception) {
+      Log.w("FlutterPlayout", "Failed initializing audioPlayerFactory", e)
     }
   }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    playerViewFactory.onDetachActivity()
-    audioPlayerFactory.onDetachActivity()
+    playerViewFactory?.onDetachActivity()
+    audioPlayerFactory?.onDetachActivity()
   }
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
     activity = binding.activity
-    playerViewFactory.onAttachActivity(binding.activity)
-    audioPlayerFactory.onAttachActivity(binding.activity)
+    playerViewFactory?.onAttachActivity(binding.activity)
+    audioPlayerFactory?.onAttachActivity(binding.activity)
   }
 
   override fun onDetachedFromActivityForConfigChanges() {
-    playerViewFactory.onDetachActivity()
-    audioPlayerFactory.onDetachActivity()
+    playerViewFactory?.onDetachActivity()
+    audioPlayerFactory?.onDetachActivity()
   }
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
     activity = binding.activity
-    playerViewFactory.onAttachActivity(binding.activity)
-    audioPlayerFactory.onAttachActivity(binding.activity)
+    playerViewFactory?.onAttachActivity(binding.activity)
+    audioPlayerFactory?.onAttachActivity(binding.activity)
   }
 
   override fun onDetachedFromActivity() {
-    playerViewFactory.onDetachActivity()
-    audioPlayerFactory.onDetachActivity()
+    playerViewFactory?.onDetachActivity()
+    audioPlayerFactory?.onDetachActivity()
   }
 }
